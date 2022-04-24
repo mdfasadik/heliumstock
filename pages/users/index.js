@@ -9,7 +9,7 @@ import CreateUser from "../../components/CreateUser";
 import EditUserModal from "../../components/users/EditUserModal";
 import DeleteModal from "../../components/deleteModal";
 
-export default function users({ response, authToken }) {
+export default function Users({ response, authToken }) {
   const store = useContext(Store);
   const [selectedUser, setSelectedUser] = useState();
   const [editUserModal, showEditUserModal] = useState(false);
