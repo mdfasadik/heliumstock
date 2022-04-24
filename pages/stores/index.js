@@ -7,7 +7,7 @@ import { FaPlus } from "react-icons/fa";
 import http from "../../services/httpService";
 import AddStoreModal from "../../components/AddStoreModal";
 
-export default function home({ response, authToken }) {
+export default function Home({ response, authToken }) {
   const [addStoreModal, steAddStoreModal] = useState(false);
   const { authToken: currentUser } = useContext(Store);
   const router = useRouter();

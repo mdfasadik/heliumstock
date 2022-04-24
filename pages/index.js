@@ -1,108 +1,49 @@
-import { useContext, useEffect, useState } from "react";
-import { useRouter } from "next/router";
-import { Store } from "../utils/store";
-
-import http from "../services/httpService";
-
 import Layout from "../components/layout";
-import RestaurantSells from "../components/dashboard/RestaurantSells";
-import DeliverySells from "../components/dashboard/DeliverySells";
-import RestaurantSellsTable from "../components/dashboard/RestaurantSellsTable";
-import DeliverySellsTable from "../components/dashboard/DeliverySellsTable";
+import { useContext, useEffect, useState } from "react";
+import { Store } from "../utils/store";
+import { useRouter } from "next/router";
+import http from "../services/httpService";
+import auth from "../services/authService";
+import Cookies from "js-cookie";
 
-export default function home({ response, authToken }) {
-  const [selectedStore, setSelectedStore] = useState();
-  const [restaurantSellsTable, showRestaurantSellsTable] = useState(false);
-  const [deliverySellsTable, showDeliverySellsTable] = useState(false);
-  const [selectedPartner, setSelectedPartner] = useState();
-
-  const { authToken: currentUser } = useContext(Store);
+export default function Home({ response }) {
+  const storeState = useContext(Store);
+  const [stores, setStores] = useState();
   const router = useRouter();
-  const { data: stores, message } = response;
-  const api = process.env.NEXT_PUBLIC_API_URL;
 
   useEffect(() => {
-    if (!currentUser) {
+    if (!storeState.authToken) {
       router.replace("/login");
     }
-    if (currentUser && currentUser.role !== "admin") {
-      router.replace("/stores");
-    }
-    if (stores) setSelectedStore(stores[0]);
+    setStores(response);
   }, []);
-
-  const handleStoreSelect = (index) => {
-    setSelectedStore(stores[index]);
-  };
-
-  if (currentUser && selectedStore) {
-    return (
-      <>
-        {selectedStore && restaurantSellsTable && (
-          <RestaurantSellsTable
-            sells={selectedStore.dineInSells}
-            showRestaurantSellsTable={showRestaurantSellsTable}
-            api={api}
-            authToken={authToken}
-            storeId={selectedStore._id}
-          />
-        )}
-        {selectedStore && deliverySellsTable && (
-          <DeliverySellsTable
-            partner={selectedPartner}
-            showDeliverySellsTable={showDeliverySellsTable}
-            api={api}
-            authToken={authToken}
-            storeId={selectedStore._id}
-          />
-        )}
-        {selectedStore && (
-          <Layout title='Dashboard'>
-            <div className='flex gap-2 mb-4'>
-              {stores.map((store) => (
-                <button
-                  key={store._id}
-                  onClick={() => handleStoreSelect(stores.indexOf(store))}
-                  className={`px-4 py-2 rounded-md font-medium text-xl ${
-                    store._id === selectedStore._id
-                      ? "bg-tertiary text-white"
-                      : "bg-gray-200 text-black"
-                  }`}>
-                  {store.name}
-                </button>
-              ))}
-            </div>
-
-            <RestaurantSells
-              store={selectedStore}
-              showRestaurantSellsTable={showRestaurantSellsTable}
-            />
-            <DeliverySells
-              store={selectedStore}
-              showDeliverySellsTable={showDeliverySellsTable}
-              setSelectedPartner={setSelectedPartner}
-            />
-          </Layout>
-        )}
-      </>
-    );
-  } else {
-    return (
-      <>
-        <Layout>
-          <h1 className='text-gray-500 text-center mt-4 text-lg'>{message}</h1>
-        </Layout>
-      </>
-    );
-  }
+  console.log(stores);
+  return (
+    <Layout title='Stores'>
+      <div>hello world</div>
+    </Layout>
+  );
 }
 export async function getServerSideProps(context) {
+  const getStores = async () => {
+    const response = await fetch("http://localhost:5000/api/stores", {
+      method: "GET",
+      headers: {
+        headers: {
+          /* prettier-ignore */
+          "Accept": "application/json, text/plain, */*",
+          "Content-Type": "application/json",
+          "x-auth-token":
+            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MjRkNTgzM2ZlMTA2OTU3OTNiOTgwOGMiLCJlbWFpbCI6InBhcnZlejEyQGdtYWlsLmNvbSIsInVzZXJuYW1lIjoiUGFydmV6Iiwicm9sZSI6ImFkbWluIiwiaWF0IjoxNjQ5NDE1NDYwfQ.Ck8i_0-AByGA4Eqm5cE8-pr5y0sxd-BMzC8xTYJucIE",
+        },
+      },
+    });
+    const data = await response.json();
+    return data;
+  };
   return {
     props: {
-      authToken: context.req.cookies["authToken"] || null,
-      response: await http.get(process.env.NEXT_PUBLIC_API_URL + "/stores", {
-        "x-auth-token": context.req.cookies["authToken"],
-      }),
-    },
+      stores: await getStores(),
+    }, // will be passed to the page component as props
   };
 }

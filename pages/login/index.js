@@ -10,7 +10,7 @@ const schema = Joi.object({
   password: Joi.string().min(4).max(255).required().label("Password"),
 });
 
-export default function login() {
+export default function Login() {
   const [loginError, setLoginError] = useState("");
   const router = useRouter();
   useEffect(() => {
