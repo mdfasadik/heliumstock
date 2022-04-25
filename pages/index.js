@@ -58,21 +58,19 @@ export default function Home({ response, authToken }) {
         )}
         {selectedStore && (
           <Layout title='Dashboard'>
-            <div className='w-screen overflow-x-auto'>
-              <div className='flex gap-2 mb-4'>
-                {stores.map((store) => (
-                  <button
-                    key={store._id}
-                    onClick={() => handleStoreSelect(stores.indexOf(store))}
-                    className={`px-4 py-2 rounded-md font-medium text-xl ${
-                      store._id === selectedStore._id
-                        ? "bg-tertiary text-white"
-                        : "bg-gray-200 text-black"
-                    }`}>
-                    {store.name}
-                  </button>
-                ))}
-              </div>
+            <div className='flex gap-2 mb-4 overflow-x-auto'>
+              {stores.map((store) => (
+                <button
+                  key={store._id}
+                  onClick={() => handleStoreSelect(stores.indexOf(store))}
+                  className={`px-4 py-2 rounded-md font-medium text-xl ${
+                    store._id === selectedStore._id
+                      ? "bg-tertiary text-white"
+                      : "bg-gray-200 text-black"
+                  }`}>
+                  {store.name}
+                </button>
+              ))}
             </div>
 
             <RestaurantSells
