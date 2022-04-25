@@ -10,6 +10,7 @@ export default function DeliverySells({
     setSelectedPartner(partner);
     showDeliverySellsTable(true);
   };
+
   if (partners.length === 0 || partners[0].sells.length === 0) return null;
 
   return (

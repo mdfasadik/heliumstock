@@ -8,6 +8,7 @@ export default function DeleteModal({
   showDeleteModal,
   url,
   authToken,
+  wantReload,
 }) {
   const router = useRouter();
 
@@ -15,14 +16,18 @@ export default function DeleteModal({
     const response = await http.del(url, { "x-auth-token": authToken });
     if (response.isDeleted) {
       toast.warning(response.message);
-      router.replace("/");
+      if (wantReload) {
+        router.reload();
+      } else {
+        router.replace("/stores");
+      }
     } else {
       toast.error(response.message);
     }
   };
 
   return (
-    <div className='w-screen h-screen fixed z-20 flex justify-center bg-black/20 items-start px-4 '>
+    <div className='w-screen h-screen fixed z-40 flex justify-center bg-black/20 backdrop-blur-sm items-start px-4 '>
       <div className='flex flex-col gap-4 justify-center mt-20 bg-white p-10 rounded-xl w-full md:w-auto'>
         <h1 className='text-xl'>
           Do you want to delete{" "}

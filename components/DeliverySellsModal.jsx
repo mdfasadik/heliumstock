@@ -170,7 +170,7 @@ export default function DeliverySellsModal({
             <button
               type='submit'
               className='group relative flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-tertiary hover:bg-primary focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-tertiary'>
-              Send From Kitchen
+              Send
             </button>
             <div
               onClick={() => showDeliverySellsModal(false)}

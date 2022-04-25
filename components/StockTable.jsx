@@ -31,6 +31,7 @@ export default function StockTable({
   }, []);
 
   const onChange = useCallback((event) => {
+    setCurrentPage(1);
     if (pageData) {
       const query = event.target.value;
       setQ(query);

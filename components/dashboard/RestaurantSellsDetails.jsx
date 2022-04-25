@@ -31,8 +31,8 @@ export default function RestaurantSellsDetails({
   };
 
   return (
-    <div className='w-screen h-screen backdrop-blur-sm fixed bg-black/40 z-40'>
-      <div className='bg-white p-6 w-2/3 mx-auto mt-10 rounded-lg'>
+    <div className='w-screen h-screen backdrop-blur-sm fixed bg-black/40 z-40 px-2'>
+      <div className='bg-white p-6 lg:w-2/3 w-full mx-auto mt-10 rounded-lg'>
         <div className='flex justify-between'>
           <button
             onClick={() => handleDelete(sell._id)}

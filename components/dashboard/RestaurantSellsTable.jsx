@@ -41,11 +41,11 @@ export default function RestaurantSellsTable({
           storeId={storeId}
         />
       )}
-      <div className='w-full h-full flex justify-center fixed bg-black/50 z-20'>
+      <div className='w-full h-full flex justify-center fixed bg-black/50 z-20 px-2'>
         {pageData && (
-          <div className='w-2/3 h-auto sm:px-6 mb-8 mt-4'>
+          <div className='lg:w-2/3 w-screen h-auto sm:px-6 mb-8 mt-4'>
             <div className='px-4 md:px-10 py-4 md:py-7 bg-white rounded-tl-lg rounded-tr-lg'>
-              <div className='md:flex items-center justify-between gap-8'>
+              <div className='flex items-center justify-between'>
                 <h1 className='text-base sm:text-lg md:text-xl lg:text-2xl font-bold leading-normal text-gray-800'>
                   Restaurant Sells
                 </h1>

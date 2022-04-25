@@ -47,6 +47,7 @@ export default function StoreId({
           showDeleteModal={showDeleteModal}
           url={process.env.NEXT_PUBLIC_API_URL + "/stores/" + storeId}
           authToken={authToken}
+          wantReload={false}
         />
       )}
       {editStoreNameModal && (
