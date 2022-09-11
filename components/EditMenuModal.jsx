@@ -21,6 +21,7 @@ export default function EditMenuModal({
   storeId,
   defaultValue,
 }) {
+  const [isLoading, setLoading] = useState(false);
   const [deleteModal, showDeleteModa] = useState(false);
   const router = useRouter();
 
@@ -37,6 +38,7 @@ export default function EditMenuModal({
   });
 
   const onSubmit = async (data) => {
+    setLoading(true);
     const response = await http.put(
       api + "/stores/" + storeId + "/menuItems/" + defaultValue._id,
       data,
@@ -44,6 +46,7 @@ export default function EditMenuModal({
         "x-auth-token": token,
       }
     );
+    setLoading(false);
     if (response.data) {
       showEditMenuModal(false);
       toast.success(response.message);
@@ -80,6 +83,8 @@ export default function EditMenuModal({
           showDeleteModal={showDeleteModa}
           url={api + "/stores/" + storeId + "/menuItems/" + defaultValue._id}
           wantReload={true}
+          setLoading={setLoading}
+          isLoading={isLoading}
         />
       )}
       <div className='w-screen h-screen flex justify-center items-start fixed bg-black/50 z-20 p-2 overflow-y-auto'>
@@ -164,8 +169,9 @@ export default function EditMenuModal({
             <div className='flex gap-2'>
               <button
                 type='submit'
+                disabled={isLoading && true}
                 className='group relative flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-tertiary hover:bg-primary focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-tertiary'>
-                Update
+                {isLoading ? "Updating..." : "Update"}
               </button>
             </div>
             <div

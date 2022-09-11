@@ -20,6 +20,7 @@ export default function DeliveyPartnerModal({
   storeId,
   deliveryPartners,
 }) {
+  const [isLoading, setLoading] = useState(false);
   const [editDeliveryPartnerModal, showEditDeliveryPartnerModal] =
     useState(false);
   const [selectedPartner, setSelectedPartner] = useState("");
@@ -35,6 +36,7 @@ export default function DeliveyPartnerModal({
 
   const onSubmit = async (data) => {
     const payload = { deliveryPartner: { ...data } };
+    setLoading(true);
     const response = await http.put(
       api + "/stores/" + storeId + "/deliveryPartners",
       payload,
@@ -42,12 +44,13 @@ export default function DeliveyPartnerModal({
         "x-auth-token": token,
       }
     );
+    setLoading(false);
     if (response.data) {
       showDeliveryPartnerModal(false);
       toast.success(response.message);
       setTimeout(() => {
         router.reload();
-      }, 1000);
+      }, 500);
     } else {
       toast.error(response.message);
     }
@@ -111,8 +114,9 @@ export default function DeliveyPartnerModal({
           <div className='flex gap-2'>
             <button
               type='submit'
+              disabled={isLoading && true}
               className='group relative flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-tertiary hover:bg-primary focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-tertiary'>
-              Add Partner
+              {isLoading ? "Adding..." : "Add Partner"}
             </button>
             <div
               onClick={() => showDeliveryPartnerModal(false)}

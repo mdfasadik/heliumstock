@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import http from "../../services/httpService";
 import { MdCancel } from "react-icons/md";
 import { useRouter } from "next/router";
@@ -12,9 +12,11 @@ export default function DeliverySellsDetails({
   storeId,
   partnerId,
 }) {
+  const [isLoading, setLoading] = useState(false);
   const router = useRouter();
 
   const handleDelete = async (sellId) => {
+    setLoading(true);
     const response = await http.del(
       api +
         "/stores/" +
@@ -25,13 +27,13 @@ export default function DeliverySellsDetails({
         sellId,
       { "x-auth-token": authToken }
     );
-
+    setLoading(false);
     if (response.isDeleted) {
       setSelectedSell(false);
       toast.warn(response.message);
       setTimeout(() => {
         router.reload();
-      }, 1000);
+      }, 500);
     } else {
       toast.error(response.message);
     }
@@ -43,8 +45,9 @@ export default function DeliverySellsDetails({
         <div className='flex justify-between'>
           <button
             onClick={() => handleDelete(sell._id)}
+            disabled={isLoading && true}
             className='px-4 py-2 text-white font-medium bg-red-600 hover:bg-red-700 rounded-md'>
-            Delete Record
+            {isLoading ? "Deleting..." : "Delete Record"}
           </button>
           <button onClick={() => setSelectedSell(false)} className='text-2xl'>
             <MdCancel />

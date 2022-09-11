@@ -14,6 +14,7 @@ export default function SellsModal({
   storeId,
   menuItems,
 }) {
+  const [isLoading, setLoading] = useState(false);
   const [addedMenuItems, setAddedMenuItems] = useState([]);
   const itemsRef = useRef(null);
   const quantityRef = useRef(null);
@@ -58,6 +59,7 @@ export default function SellsModal({
         totalDineInProfit: 0,
       },
     };
+    setLoading(true);
     const response = await http.put(
       api + "/stores/" + storeId + "/dineInSells/",
       payload,
@@ -65,6 +67,7 @@ export default function SellsModal({
         "x-auth-token": token,
       }
     );
+    setLoading(false);
     if (response.data) {
       showSellsModal(false);
       toast.success(response.message);
@@ -195,8 +198,9 @@ export default function SellsModal({
           <div className='flex gap-2'>
             <button
               type='submit'
+              disabled={isLoading && true}
               className='group relative flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-tertiary hover:bg-primary focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-tertiary'>
-              Send
+              {isLoading ? "Sending..." : "Send"}
             </button>
             <div
               onClick={() => showSellsModal(false)}

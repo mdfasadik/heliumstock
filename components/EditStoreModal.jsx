@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useRouter } from "next/router";
 import { useForm } from "react-hook-form";
 import { joiResolver } from "@hookform/resolvers/joi";
@@ -17,6 +17,7 @@ export default function AddStoreModal({
   storeId,
   defaultValue,
 }) {
+  const [isLoading, setLoading] = useState(false);
   const router = useRouter();
   const {
     register,
@@ -30,15 +31,17 @@ export default function AddStoreModal({
   });
 
   const onSubmit = async (data) => {
+    setLoading(true);
     const response = await http.put(api + "/stores/" + storeId, data, {
       "x-auth-token": token,
     });
+    setLoading(false);
     if (response.data) {
       setEditStoreNameModal(false);
       toast.success(response.message);
       setTimeout(() => {
         router.reload();
-      }, 1000);
+      }, 500);
     } else {
       toast.error(response.message);
     }
@@ -69,8 +72,9 @@ export default function AddStoreModal({
         <div className='flex gap-2'>
           <button
             type='submit'
+            disabled={isLoading && true}
             className='group relative flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-tertiary hover:bg-primary focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-tertiary'>
-            Update
+            {isLoading ? "Updating..." : "Update"}
           </button>
           <div
             onClick={() => setEditStoreNameModal(false)}

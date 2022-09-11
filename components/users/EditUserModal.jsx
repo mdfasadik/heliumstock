@@ -20,6 +20,7 @@ export default function EditUserModal({
   showEditUserModal,
   defaultValue,
 }) {
+  const [isLoading, setLoading] = useState(false);
   const {
     register,
     handleSubmit,
@@ -36,9 +37,11 @@ export default function EditUserModal({
   const router = useRouter();
 
   const onSubmit = async (data) => {
+    setLoading(true);
     const response = await http.put(api + "/users/" + defaultValue._id, data, {
       "x-auth-token": token,
     });
+    setLoading(false);
     if (response.data) {
       toast.success(response.message);
       setTimeout(() => {
@@ -129,8 +132,9 @@ export default function EditUserModal({
               <div>
                 <button
                   type='submit'
+                  disabled={isLoading && true}
                   className='group relative w-full flex justify-center py-2 px-4 border border-transparent  font-medium rounded-md text-white bg-tertiary hover:bg-tertiary/80 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-tertiary'>
-                  Update User
+                  {isLoading ? "Updating..." : "Update"}
                 </button>
               </div>
             </div>

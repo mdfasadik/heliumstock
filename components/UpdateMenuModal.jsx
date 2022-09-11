@@ -25,6 +25,7 @@ export default function UpdateMenuModal({
   storeId,
   stocks,
 }) {
+  const [isLoading, setLoading] = useState(false);
   const [ingredients, setIngredients] = useState([]);
   const ingredientRef = useRef(null);
   const quantityRef = useRef(null);
@@ -67,6 +68,7 @@ export default function UpdateMenuModal({
 
   const onSubmit = async (data) => {
     const payload = { menuItem: { ...data, ingredients } };
+    setLoading(true);
     const response = await http.put(
       api + "/stores/" + storeId + "/menuItems/",
       payload,
@@ -74,12 +76,13 @@ export default function UpdateMenuModal({
         "x-auth-token": token,
       }
     );
+    setLoading(false);
     if (response.data) {
       showUpdateMenuModal(false);
       toast.success(response.message);
       setTimeout(() => {
         router.reload();
-      }, 1000);
+      }, 500);
     } else {
       toast.error(response.message);
     }
@@ -229,8 +232,9 @@ export default function UpdateMenuModal({
           <div className='flex gap-2'>
             <button
               type='submit'
+              disabled={isLoading && true}
               className='group relative flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-tertiary hover:bg-primary focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-tertiary'>
-              Create Menu
+              {isLoading ? "Creating..." : "Create Menu"}
             </button>
             <div
               onClick={() => showUpdateMenuModal(false)}

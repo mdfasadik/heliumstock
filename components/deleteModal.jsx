@@ -9,11 +9,15 @@ export default function DeleteModal({
   url,
   authToken,
   wantReload,
+  isLoading,
+  setLoading,
 }) {
   const router = useRouter();
 
   const handleDelete = async () => {
+    setLoading(true);
     const response = await http.del(url, { "x-auth-token": authToken });
+    setLoading(false);
     if (response.isDeleted) {
       toast.warning(response.message);
       if (wantReload) {
@@ -36,8 +40,9 @@ export default function DeleteModal({
         <div className='flex gap-2'>
           <button
             onClick={handleDelete}
+            disabled={isLoading && true}
             className='px-3 py-2 bg-red-600 font-semibold hover:bg-red-800 text-white rounded-md'>
-            Delete
+            {isLoading ? "Deleting..." : "Delete"}
           </button>
           <button
             onClick={() => showDeleteModal(false)}

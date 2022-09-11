@@ -10,6 +10,7 @@ import EditUserModal from "../../components/users/EditUserModal";
 import DeleteModal from "../../components/deleteModal";
 
 export default function Users({ response, authToken }) {
+  const [isLoading, setLoading] = useState(false);
   const store = useContext(Store);
   const [selectedUser, setSelectedUser] = useState();
   const [editUserModal, showEditUserModal] = useState(false);
@@ -47,6 +48,8 @@ export default function Users({ response, authToken }) {
             content={selectedUser.username}
             url={api + "/users/" + selectedUser._id}
             showDeleteModal={showDeleteModal}
+            setLoading={setLoading}
+            isLoading={isLoading}
           />
         )}
         {editUserModal && (

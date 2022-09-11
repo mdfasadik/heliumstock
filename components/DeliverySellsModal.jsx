@@ -15,6 +15,7 @@ export default function DeliverySellsModal({
   menuItems,
   deliveryPartners,
 }) {
+  const [isLoading, setLoading] = useState(false);
   const [addedMenuItems, setAddedMenuItems] = useState([]);
   const [partnerId, setPartnerId] = useState("");
 
@@ -55,6 +56,7 @@ export default function DeliverySellsModal({
         totalProfit: 0,
       },
     };
+    setLoading(true);
     const response = await http.put(
       api + "/stores/" + storeId + "/deliverySells/" + partnerId,
       payload,
@@ -62,12 +64,13 @@ export default function DeliverySellsModal({
         "x-auth-token": token,
       }
     );
+    setLoading(false);
     if (response.data) {
       showDeliverySellsModal(false);
       toast.success(response.message);
       setTimeout(() => {
         router.reload();
-      }, 1000);
+      }, 500);
     } else {
       toast.error(response.message);
     }
@@ -169,8 +172,9 @@ export default function DeliverySellsModal({
           <div className='flex gap-2'>
             <button
               type='submit'
+              disabled={isLoading && true}
               className='group relative flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-tertiary hover:bg-primary focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-tertiary'>
-              Send
+              {isLoading ? "Sending..." : "Send"}
             </button>
             <div
               onClick={() => showDeliverySellsModal(false)}

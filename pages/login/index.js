@@ -4,6 +4,7 @@ import { useRouter } from "next/router";
 import { joiResolver } from "@hookform/resolvers/joi";
 import Joi from "joi";
 import auth from "../../services/authService";
+import Loading from "../../components/loading";
 
 const schema = Joi.object({
   email: Joi.string().min(5).max(255).required().label("Email"),
@@ -11,6 +12,7 @@ const schema = Joi.object({
 });
 
 export default function Login() {
+  const [isLoading, steLoading] = useState(false);
   const [loginError, setLoginError] = useState("");
   const router = useRouter();
   useEffect(() => {
@@ -22,14 +24,22 @@ export default function Login() {
   });
 
   const onSubmit = async (data) => {
+    steLoading(true);
     const response = await auth.login(data);
-    if (response.message) return setLoginError(response.message);
+    if (response.message) {
+      setLoginError(response.message);
+      steLoading(false);
+      return;
+    }
+
     const token = response.data;
     auth.setAuthToken(token);
+    steLoading(false);
     router.reload();
   };
   return (
     <>
+      {isLoading && <Loading />}
       <div className='min-h-full flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8'>
         <div className='max-w-md w-full bg-white p-6 rounded-lg shadow-sm space-y-8'>
           <div>
@@ -81,7 +91,7 @@ export default function Login() {
               <button
                 type='submit'
                 className='group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-secondary hover:bg-tertiary focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500'>
-                Sign in
+                {isLoading ? "Signing In..." : "Sign In"}
               </button>
             </div>
           </form>
